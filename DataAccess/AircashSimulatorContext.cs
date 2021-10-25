@@ -10,12 +10,13 @@ namespace DataAccess
         }
 
         public DbSet<SettingEntity> Settings { get; set; }
-        //public DbSet<TransactionEntity> Transactions { get; set; }
+        public DbSet<TransactionEntity> Transactions { get; set; }
         //public DbSet<PartnerEntity> Partners { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SettingEntity>().ToTable("Settings");
+            modelBuilder.Entity<TransactionEntity>().ToTable("Transactions");
         }
     }
 }
