@@ -8,16 +8,16 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        public Guid PartnerId { get; set; }
+        public Guid PartnerId { get; set; } // not null
+         
+        public string PartnerName { get; set; } // max 256, not null
 
-        public string PartnerName { get; set; }
+        public string PrivateKey { get; set; } // not null
 
-        public string PrivateKey { get; set; }
+        public string PrivateKeyPass { get; set; } // not null
 
-        public string PrivateKeyPass { get; set; }
+        public int CurrencyId { get; set; } // not null
 
-        public int CurrencyId { get; set; }
-
-        public string CountryCode { get; set; }
+        public string CountryCode { get; set; } // not null
     }
 }

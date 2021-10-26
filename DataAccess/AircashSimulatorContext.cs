@@ -15,8 +15,7 @@ namespace DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SettingEntity>().ToTable("Settings");
-            modelBuilder.Entity<TransactionEntity>().ToTable("Transactions");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AircashSimulatorContext).Assembly);
         }
     }
 }
