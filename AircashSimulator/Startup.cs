@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Services.AbonSalePartner;
 using Services.AbonOnlinePartner;
+using Services.PartnerService;
 
 namespace AircashSimulator
 {
@@ -30,6 +31,7 @@ namespace AircashSimulator
 
             services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
             services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
+            services.AddTransient<IPartnerService, PartnerService>();
         }
 
         

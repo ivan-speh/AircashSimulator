@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Services.PartnerService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,16 @@ namespace AircashSimulator
     [ApiController]
     public class PartnerController : ControllerBase
     {
-        public PartnerController()
+        private IPartnerService PartnerService;
+        public PartnerController(IPartnerService partnerService)
         {
+            PartnerService = partnerService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPartners()
+        public async Task<IActionResult> GetPartner(int Id)
         {
-            return Ok("Partners...");
+            return Ok(PartnerService.GetPartner(Id));
         }
     }
 }
