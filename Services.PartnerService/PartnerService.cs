@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DataAccess;
+using Domain.Entities;
 
 namespace Services.PartnerService
 {
@@ -31,7 +32,17 @@ namespace Services.PartnerService
 
         public List<PartnerDto> GetPartners()
         {
-            throw new NotImplementedException();
+            var partners = AircashSimulatorContext.Partners.Select(partnerEntity => new PartnerDto
+            {       
+                Id = partnerEntity.Id,
+                PartnerId = partnerEntity.PartnerId,
+                PartnerName = partnerEntity.PartnerName,
+                PrivateKey = partnerEntity.PrivateKey,
+                PrivateKeyPass = partnerEntity.PrivateKeyPass,
+                CurrencyId = partnerEntity.CurrencyId,
+                CountryCode = partnerEntity.CountryCode 
+            }).ToList();
+            return partners;
         }
 
         public void SavePartner(PartnerDto partner)
