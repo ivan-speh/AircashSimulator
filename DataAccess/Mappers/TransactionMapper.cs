@@ -9,6 +9,16 @@ namespace DataAccess.Mappers
         public void Configure(EntityTypeBuilder<TransactionEntity> builder)
         {
             builder.ToTable("Transactions");
+            builder.Property(x => x.Amount).HasPrecision(18, 2).IsRequired();
+            builder.Property(x => x.ISOCurrencyId).IsRequired();
+            builder.Property(x => x.Code).IsRequired().HasMaxLength(16).HasColumnName("Code");
+            builder.Property(x => x.PartnerId).IsRequired();
+            builder.Property(x => x.TransactionId).IsRequired();
+            builder.Property(x => x.RequestDateTimeUTC).HasColumnType("datetime2").IsRequired(false);
+            builder.Property(x => x.ResponseDateTimeUTC).HasColumnType("datetime2").IsRequired(false);
+            builder.Property(x => x.ServiceId).IsRequired();
+            builder.Property(x => x.UserId).IsRequired();
+            builder.Property(x => x.PointOfSaleId).HasMaxLength(128);
         }
     }
 }
