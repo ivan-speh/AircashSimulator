@@ -88,8 +88,7 @@ namespace DataAccess.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(16)
-                        .HasColumnType("nvarchar(16)")
-                        .HasColumnName("Code");
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<int>("ISOCurrencyId")
                         .HasColumnType("int");
