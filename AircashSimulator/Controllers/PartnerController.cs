@@ -28,5 +28,11 @@ namespace AircashSimulator
         {
             return Ok(PartnerService.GetPartners());
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePartner(PartnerDto partner)
+        {
+            return Ok();
+        }
     }
 }
