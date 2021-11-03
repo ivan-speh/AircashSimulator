@@ -48,33 +48,22 @@ namespace Services.PartnerService
         public void SavePartner(PartnerDto partner)
         {
             Guid partnerId = partner.PartnerId;
-            var partnerDb = AircashSimulatorContext.Partners.FirstOrDefault(x => x.PartnerId == partnerId);
+
+            var partnerDb = AircashSimulatorContext.Partners.FirstOrDefault(x => x.PartnerId == partnerId) ?? new PartnerEntity();
+
+            partnerDb.PartnerId = partner.PartnerId;
+            partnerDb.PartnerName = partner.PartnerName;
+            partnerDb.PrivateKey = partner.PrivateKey;
+            partnerDb.PrivateKeyPass = partner.PrivateKeyPass;
+            partnerDb.CurrencyId = partner.CurrencyId;
+            partnerDb.CountryCode = partner.CountryCode;
+
             if (partnerDb == null)
-            {
-                var newPartnerEntity = new PartnerEntity
-                {
-                    Id = partner.Id,
-                    PartnerId = partner.PartnerId,
-                    PartnerName = partner.PartnerName,
-                    PrivateKey = partner.PrivateKey,
-                    PrivateKeyPass = partner.PrivateKeyPass,
-                    CurrencyId = partner.CurrencyId,
-                    CountryCode = partner.CountryCode
-                };
-                AircashSimulatorContext.Partners.Add(newPartnerEntity);
-                AircashSimulatorContext.SaveChanges();
-            }
+                AircashSimulatorContext.Partners.Add(partnerDb);
             else
-            {
-                partnerDb.Id = partner.Id;
-                partnerDb.PartnerId = partner.PartnerId;
-                partnerDb.PartnerName = partner.PartnerName;
-                partnerDb.PrivateKey = partner.PrivateKey;
-                partnerDb.PrivateKeyPass = partner.PrivateKeyPass;
-                partnerDb.CurrencyId = partner.CurrencyId;
-                partnerDb.CountryCode = partner.CountryCode;
-                AircashSimulatorContext.SaveChanges();
-            }
+                AircashSimulatorContext.Partners.Update(partnerDb);
+
+            AircashSimulatorContext.SaveChanges();
         }
     }
 }
