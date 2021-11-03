@@ -20,14 +20,14 @@ namespace AircashSimulator
         [HttpPost]
         public async Task<IActionResult> ValidateCoupon(ValidateCouponRequest validateCouponRequest)
         {
-            await AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest);
+            await AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest.CouponCode);
             return Ok(validateCouponRequest);
         }
 
         [HttpPost]
         public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionRequest confirmTransactionRequest)
         {
-            await AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest);
+            await AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest.CouponCode, confirmTransactionRequest.UserId);
             return Ok(confirmTransactionRequest);
         }
     }
