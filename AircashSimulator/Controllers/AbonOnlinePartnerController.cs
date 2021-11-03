@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AircashSimulator.Controllers;
+using Services.AbonOnlinePartner;
 
 namespace AircashSimulator
 {
@@ -11,18 +11,23 @@ namespace AircashSimulator
     [ApiController]
     public class AbonOnlinePartnerController : ControllerBase
     {
-        public AbonOnlinePartnerController()
+        private IAbonOnlinePartnerService AbonOnlinePartnerService;
+        public AbonOnlinePartnerController(IAbonOnlinePartnerService abonOnlinePartnerService)
         {
+            AbonOnlinePartnerService = abonOnlinePartnerService;
         }
 
         [HttpPost]
         public async Task<IActionResult> ValidateCoupon(ValidateCouponRequest validateCouponRequest)
         {
+            await AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest);
             return Ok(validateCouponRequest);
         }
+
         [HttpPost]
         public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionRequest confirmTransactionRequest)
         {
+            await AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest);
             return Ok(confirmTransactionRequest);
         }
     }

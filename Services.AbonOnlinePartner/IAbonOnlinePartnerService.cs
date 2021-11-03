@@ -8,7 +8,7 @@ namespace Services.AbonOnlinePartner
 {
     public interface IAbonOnlinePartnerService
     {
-        Task ValidateCoupon();
-        Task ConfirmTransaction();
+        Task ValidateCoupon(ValidateCouponRequest validateCouponRequest);
+        Task ConfirmTransaction(ConfirmTransactionRequest confirmTransactionRequest);
     }
 }
