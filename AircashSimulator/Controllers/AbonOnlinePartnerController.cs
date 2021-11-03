@@ -18,11 +18,12 @@ namespace AircashSimulator
         [HttpPost]
         public async Task<IActionResult> ValidateCoupon(ValidateCouponRequest validateCouponRequest)
         {
-            return Ok("Validated");
-        }        
+            return Ok(validateCouponRequest);
+        }
+        [HttpPost]
         public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionRequest confirmTransactionRequest)
         {
-            return Ok("Confirmed");
+            return Ok(confirmTransactionRequest);
         }
     }
 }

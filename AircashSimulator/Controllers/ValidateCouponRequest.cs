@@ -7,6 +7,6 @@ namespace AircashSimulator.Controllers
 {
     public class ValidateCouponRequest
     {
-        public int CouponCode;
+        public string CouponCode { get; set; }
     }
 }
