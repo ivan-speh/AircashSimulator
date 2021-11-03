@@ -24,6 +24,7 @@ namespace AircashSimulator
             return Ok(PartnerService.GetPartner(Id));
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetPartners()
         {
             return Ok(PartnerService.GetPartners());
