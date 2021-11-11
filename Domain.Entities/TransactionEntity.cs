@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public decimal Amount { get; set; } 
         public CurrencyEnum ISOCurrencyId { get; set; }
-        public string Code { get; set; } 
+        public string CouponCode { get; set; } 
         public Guid PartnerId { get; set; } 
         public string AircashTransactionId { get; set; }
         public Guid TransactionId { get; set; } 

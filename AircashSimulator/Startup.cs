@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Services.AbonSalePartner;
 using Services.AbonOnlinePartner;
+using Services.HttpRequest;
 
 namespace AircashSimulator
 {
@@ -27,9 +28,11 @@ namespace AircashSimulator
             services.AddMvc();
             
             services.AddDbContext<AircashSimulatorContext>(options => options.UseSqlServer(Configuration["AbonSimulatorConfiguration:ConnectionString"]), ServiceLifetime.Transient);
+            services.AddHttpClient<IHttpRequestService, HttpRequestService>();
 
             services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
             services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
+            services.AddTransient<IHttpRequestService, HttpRequestService>();
         }
 
         

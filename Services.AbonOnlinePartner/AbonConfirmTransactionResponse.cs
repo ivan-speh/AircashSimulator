@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Services.AbonOnlinePartner
     class AbonConfirmTransactionResponse
     {
         public decimal CouponValue { get; set; }
-        public string ISOCurrency { get; set; }
-        public string ProviderTransactionId { get; set; }
+        public CurrencyEnum ISOCurrency { get; set; }
+        public Guid ProviderTransactionId { get; set; }
     }
 }

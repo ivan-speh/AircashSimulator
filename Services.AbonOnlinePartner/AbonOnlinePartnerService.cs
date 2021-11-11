@@ -2,89 +2,70 @@
 using Domain.Entities;
 using System;
 using System.Threading.Tasks;
+using Domain.Entities.Enum;
+using AircashSignature;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Services.HttpRequest;
 
 namespace Services.AbonOnlinePartner
 {
     public class AbonOnlinePartnerService : IAbonOnlinePartnerService
     {
         private AircashSimulatorContext AircashSimulatorContext;
-        public AbonOnlinePartnerService(AircashSimulatorContext aircashSimulatorContext)
+        private IHttpRequestService HttpRequestService;
+        public AbonOnlinePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService)
         {
             AircashSimulatorContext = aircashSimulatorContext;
+            HttpRequestService = httpRequestService;
         }
         public async Task ValidateCoupon(string couponCode)
         {
-            var providerId = "fe3cfec2-1d1d-45e1-a49f-d3708db45a5a";
-            string signature = "";
+            var providerId = new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF");
             var abonValidateCouponRequest = new AbonValidateCouponRequest
             {
                 CouponCode = couponCode,
-                ProviderId = providerId,
-                Signature = signature
+                ProviderId = providerId
             };
-            var newTransaction = new TransactionEntity
-            {
-                CouponCode = couponCode,
-                PartnerId = providerId,
-                TransactionId = "d0e19ce2-df5f-48d0-8520-7513618a6d72",
-                RequestDateTimeUTC = DateTime.UtcNow,
-            };
-            AircashSimulatorContext.Transactions.Add(newTransaction);
-            AircashSimulatorContext.SaveChanges();
-
-            //mock request na abon servis
-            var abonValidateCouponResponse = new AbonValidateCouponResponse
-            {
-                CouponValue = 100.0M,
-                IsValid = true,
-                ISOCurrency = "190",
-                ProviderTransactionId = "d0e19ce2-df5f-48d0-8520-7513618a6d72",
-                OriginalCouponValue = 100.0M,
-                OriginalISOCurrency = "HRK"
-            };
-
-            newTransaction.Amount = abonValidateCouponResponse.CouponValue;
-            newTransaction.ISOCurrencyId = Int32.Parse(abonValidateCouponResponse.ISOCurrency);
-            newTransaction.ResponseDateTimeUTC = DateTime.UtcNow;
-            
-            AircashSimulatorContext.Transactions.Update(newTransaction);
-            AircashSimulatorContext.SaveChanges();
+            var dataToSign = AircashSignatureService.ConvertObjectToString(abonValidateCouponRequest);
+            var signature = AircashSignatureService.GenerateSignature(dataToSign, "C:\\Users\\user\\Desktop\\Mihael\\OpenSSL\\OnlineVirtualPartnerPrivateKey.pfx", "Aircash123");
+            abonValidateCouponRequest.Signature = signature;
+            DateTime requestDateTime = DateTime.UtcNow;
+            var responseString = await HttpRequestService.SendRequestAircash(abonValidateCouponRequest, HttpMethod.Post, "https://staging-a-bon.aircash.eu/rest/api/OnlineProvider/ValidateCoupon");
+            var abonValidateCouponResponse = JsonConvert.DeserializeObject<AbonValidateCouponResponse>(responseString);
         }
 
         public async Task ConfirmTransaction(string couponCode, string userId)
         {
-            var providerId = "fe3cfec2-1d1d-45e1-a49f-d3708db45a5a";
-            var providerTransactionId = (new Guid()).ToString();
-            string signature = "";
+            var providerId = new Guid("33352406-f672-4c27-a415-e26eb3ecd691");
+            var providerTransactionId = new Guid("d0e19ce2-df5f-48d0-8520-7513618a6d72");
             var abonConfirmTransactionRequest = new AbonConfirmTransactionRequest
             {
                 CouponCode = couponCode,
                 ProviderId = providerId,
                 ProviderTransactionId = providerTransactionId,
-                UserId = userId,
-                Signature = signature
+                UserId = userId
             };
+            var dataToSign = AircashSignatureService.ConvertObjectToString(abonConfirmTransactionRequest);
+            var signature = AircashSignatureService.GenerateSignature(dataToSign, "C:\\Users\\user\\Desktop\\Mihael\\OpenSSL\\PrivateKeyPfxFile.pfx", "Aircash123");
+            abonConfirmTransactionRequest.Signature = signature;
             DateTime requestDateTime = DateTime.UtcNow;
-            //mock request na abon servis
-            var abonConfirmTransacionResponse = new AbonConfirmTransactionResponse
-            {
-                CouponValue = 100.0M,
-                ISOCurrency = "190",
-                ProviderTransactionId = (new Guid()).ToString()
-            };
+            var responseString = await HttpRequestService.SendRequestAircash(abonConfirmTransactionRequest, HttpMethod.Post, "https://staging-a-bon.aircash.eu/rest/api/OnlinePartner/ValidateCoupon");
+            var abonConfirmTransactionResponse = JsonConvert.DeserializeObject<AbonConfirmTransactionResponse>(responseString);
             var newTransaction = new TransactionEntity
             {
-                Amount = abonConfirmTransacionResponse.CouponValue,
-                ISOCurrencyId = Int32.Parse(abonConfirmTransacionResponse.ISOCurrency),
+                Amount = abonConfirmTransactionResponse.CouponValue,
+                ISOCurrencyId = abonConfirmTransactionResponse.ISOCurrency,
                 CouponCode = couponCode,
                 PartnerId = providerId,
-                TransactionId = "d0e19ce2-df5f-48d0-8520-7513618a6d72",
+                TransactionId = new Guid(),
                 RequestDateTimeUTC = requestDateTime,
                 ResponseDateTimeUTC = DateTime.UtcNow,
-                ServiceId = 6,
-                UserId = userId,
+                UserId = new Guid(),
+                ServiceId = ServiceEnum.AbonUsed
             };
-            AircashSimulatorContext.Transactions.Add(newTransaction);
+            AircashSimulatorContext.Add(newTransaction);
             AircashSimulatorContext.SaveChanges();
         }
     }

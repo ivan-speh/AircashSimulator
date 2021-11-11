@@ -18,6 +18,7 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Services.AbonOnlinePartner\Services.AbonOnlinePartner.csproj" />
     <ProjectReference Include="..\Services.AbonSalePartner\Services.AbonSalePartner.csproj" />
+    <ProjectReference Include="..\Services.HttpRequest\Services.HttpRequest.csproj" />
   </ItemGroup>
 
 </Project>

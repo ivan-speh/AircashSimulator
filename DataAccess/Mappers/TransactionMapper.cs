@@ -11,7 +11,7 @@ namespace DataAccess.Mappers
             builder.ToTable("Transactions");
             builder.Property(x => x.Amount).HasPrecision(18, 2).IsRequired();
             builder.Property(x => x.ISOCurrencyId).IsRequired();
-            builder.Property(x => x.Code).IsRequired().HasMaxLength(16);
+            builder.Property(x => x.CouponCode).IsRequired().HasMaxLength(16);
             builder.Property(x => x.PartnerId).IsRequired();
             builder.Property(x => x.TransactionId).IsRequired();
             builder.Property(x => x.RequestDateTimeUTC).HasColumnType("datetime2").IsRequired(false);

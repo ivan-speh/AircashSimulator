@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,9 @@ namespace Services.AbonOnlinePartner
     {
         public decimal CouponValue { get; set; }
         public bool IsValid { get; set; }
-        public string ISOCurrency { get; set; }
-        public string ProviderTransactionId { get; set; }
+        public CurrencyEnum ISOCurrency { get; set; }
+        public Guid ProviderTransactionId { get; set; }
         public decimal OriginalCouponValue { get; set; }
-        public string OriginalISOCurrency { get; set; }
+        public CurrencyEnum OriginalISOCurrency { get; set; }
     }
 }

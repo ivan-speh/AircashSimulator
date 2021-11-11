@@ -46,7 +46,7 @@ namespace Services.AbonSalePartner
             AircashSimulatorContext.Transactions.Add(new TransactionEntity { 
                 Amount=value,
                 ISOCurrencyId=CurrencyEnum.HRK,
-                Code=createCouponResponse.CouponCode,
+                CouponCode=createCouponResponse.CouponCode,
                 PartnerId=guid,
                 AircashTransactionId=createCouponResponse.SerialNumber,
                 TransactionId= Guid.NewGuid(),
