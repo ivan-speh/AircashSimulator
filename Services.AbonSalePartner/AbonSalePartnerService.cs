@@ -59,7 +59,7 @@ namespace Services.AbonSalePartner
             });
             AircashSimulatorContext.SaveChanges();
 
-
+            //spremanje kupona u Coupons tablicu
         }
 
         public async Task CancelCoupon(string serialNumber, string pointOfSaleId)

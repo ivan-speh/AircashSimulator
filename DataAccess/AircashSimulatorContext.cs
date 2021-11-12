@@ -12,10 +12,12 @@ namespace DataAccess
         public DbSet<SettingEntity> Settings { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<PartnerEntity> Partners { get; set; }
+        public DbSet<CouponEntity> Coupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AircashSimulatorContext).Assembly);
+            modelBuilder.Entity<CouponEntity>().ToTable("Coupons");
         }
     }
 }
