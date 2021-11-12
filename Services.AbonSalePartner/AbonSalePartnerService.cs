@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Entities.Enum;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.AbonSalePartner
@@ -14,14 +15,14 @@ namespace Services.AbonSalePartner
             AircashSimulatorContext = aircashSimulatorContext;
         }
 
-        static Guid guid = Guid.NewGuid();
-
-        public async Task CreateCoupon(decimal value, string pointOfSaleId)
+        public async Task CreateCoupon(decimal value, string pointOfSaleId, Guid partnerId)
         {
+
+            var partner = AircashSimulatorContext.Partners.Where(x => x.PartnerId == partnerId).FirstOrDefault();
             var requestDateTimeUTC = DateTime.UtcNow;
             var createCouponRequest = new CreateCouponRequest()
             {
-                PartnerId = guid.ToString(),
+                PartnerId = partnerId.ToString(),
                 Value = value,
                 PointOfSaleId = pointOfSaleId,
                 //ISOCurrencySymbol = "HRK",
@@ -47,7 +48,7 @@ namespace Services.AbonSalePartner
                 Amount=value,
                 ISOCurrencyId=CurrencyEnum.HRK,
                 CouponCode=createCouponResponse.CouponCode,
-                PartnerId=guid,
+                PartnerId=partnerId,
                 AircashTransactionId=createCouponResponse.SerialNumber,
                 TransactionId= Guid.NewGuid(),
                 ServiceId=ServiceEnum.AbonIssued,
@@ -57,9 +58,20 @@ namespace Services.AbonSalePartner
                 ResponseDateTimeUTC=responseDateTimeUTC
                 
             });
+            //spremanje kupona u Coupons tablicu
+            AircashSimulatorContext.Coupons.Add(new CouponEntity
+            {
+                SerialNumber = createCouponResponse.CouponCode,
+                PurchasedPartnerID = partner.Id,
+                PurchasedAmount = value,
+                PurchasedCurrency = (CurrencyEnum)partner.CurrencyId,
+                PurchasedCountryIsoCode=partner.CountryCode,
+                PurchasedOnUTC= requestDateTimeUTC
+
+            });
             AircashSimulatorContext.SaveChanges();
 
-            //spremanje kupona u Coupons tablicu
+            
         }
 
         public async Task CancelCoupon(string serialNumber, string pointOfSaleId)
