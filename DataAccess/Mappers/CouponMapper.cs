@@ -27,7 +27,7 @@ namespace DataAccess.Mappers
             builder.Property(x => x.UsedOnUTC).HasColumnType("datetime2").IsRequired(false);
             builder.Property(x => x.UserId).IsRequired(false);
             builder.Property(x => x.CancelledOnUTC).HasColumnType("datetime2").IsRequired(false);
-
+            builder.Property(x => x.Content).IsRequired();
         }
     }
 }

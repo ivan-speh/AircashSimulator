@@ -21,6 +21,7 @@ namespace Domain.Entities
         public DateTime? UsedOnUTC { get; set; }//datetime2, null
         public string UserId { get; set; }//null
         public DateTime? CancelledOnUTC { get; set; }//datetime2, null
+        public string Content { get; set; } //not null, varchar
 
         public PartnerEntity PurchasedPartner { get; set; }
         public PartnerEntity UsedOnPartner { get; set; }

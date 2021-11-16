@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AircashSignature;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Services.AbonSalePartner
 {
-    class CreateCouponRequest
+    public class CreateCouponRequest :ISignature
     {
         public string PartnerId { get; set; }
         public decimal Value { get; set; }

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AircashSimulator.Controllers;
 using Services.AbonSalePartner;
 
 namespace AircashSimulator
@@ -23,6 +22,7 @@ namespace AircashSimulator
         {
             await AbonSalePartnerService.CreateCoupon(createCouponRequest.Value, createCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
             return Ok(createCouponRequest);
+            //return Ok(AbonSalePartnerService.CreateCoupon(createCouponRequest.Value, createCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF")));
         }
         [HttpPost]
         public async Task<IActionResult> CancelCoupon(CancelCouponRequest cancelCouponRequest)

@@ -1,23 +1,31 @@
-﻿using DataAccess;
+﻿using AircashSignature;
+using DataAccess;
 using Domain.Entities;
 using Domain.Entities.Enum;
+using Newtonsoft.Json;
+using Services.HttpRequest;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+
 
 namespace Services.AbonSalePartner
 {
     public class AbonSalePartnerService : IAbonSalePartnerService
     {
         private AircashSimulatorContext AircashSimulatorContext;
-        public AbonSalePartnerService(AircashSimulatorContext aircashSimulatorContext)
+        private IHttpRequestService HttpRequestService;
+        public AbonSalePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService)
         {
             AircashSimulatorContext = aircashSimulatorContext;
+            HttpRequestService = httpRequestService;
         }
+
+
 
         public async Task CreateCoupon(decimal value, string pointOfSaleId, Guid partnerId)
         {
-
             var partner = AircashSimulatorContext.Partners.Where(x => x.PartnerId == partnerId).FirstOrDefault();
             var requestDateTimeUTC = DateTime.UtcNow;
             var createCouponRequest = new CreateCouponRequest()
@@ -25,26 +33,22 @@ namespace Services.AbonSalePartner
                 PartnerId = partnerId.ToString(),
                 Value = value,
                 PointOfSaleId = pointOfSaleId,
-                //ISOCurrencySymbol = "HRK",
+                ISOCurrencySymbol = "HRK",
                 PartnerTransactionId = Guid.NewGuid().ToString(),
                 ContentType = null,
-                ContentWidth=null,
-                Signature=null
-
+                ContentWidth = null
             };
+            var sequence = AircashSignatureService.ConvertObjectToString(createCouponRequest);
+            var signature = AircashSignatureService.GenerateSignature(sequence, partner.PrivateKey, partner.PrivateKeyPass);
+            //var signature = AircashSignatureService.GenerateSignature(sequence, "C:\\cert\\OnlineVirtualPartnerPrivateKey.pfx", partner.PrivateKeyPass);
+            createCouponRequest.Signature = signature;
+            var responseString = await HttpRequestService.SendRequestAircash(createCouponRequest, HttpMethod.Post, "https://staging-a-bon.aircash.eu/rest/api/CashRegister/CreateCoupon");
+            var createCouponResponse = JsonConvert.DeserializeObject<CreateCouponResponse>(responseString);
 
-            var createCouponResponse = new CreateCouponResponse()
-            {
-                SerialNumber="5722230340416087",
-                CouponCode="3542893940565049",
-                Value=value,
-                IsoCurrencySymbol="EUR",
-                Content="abc...123",
-                PartnerTransactionId="0b376282-1a6f-4c1a-a7a1-36153086d760"
-
-            };
+         
             var responseDateTimeUTC = DateTime.UtcNow;
-            AircashSimulatorContext.Transactions.Add(new TransactionEntity { 
+            AircashSimulatorContext.Transactions.Add(new TransactionEntity 
+            { 
                 Amount=value,
                 ISOCurrencyId=CurrencyEnum.HRK,
                 CouponCode=createCouponResponse.CouponCode,
@@ -58,6 +62,7 @@ namespace Services.AbonSalePartner
                 ResponseDateTimeUTC=responseDateTimeUTC
                 
             });
+
             //spremanje kupona u Coupons tablicu
             AircashSimulatorContext.Coupons.Add(new CouponEntity
             {
@@ -66,7 +71,8 @@ namespace Services.AbonSalePartner
                 PurchasedAmount = value,
                 PurchasedCurrency = (CurrencyEnum)partner.CurrencyId,
                 PurchasedCountryIsoCode=partner.CountryCode,
-                PurchasedOnUTC= requestDateTimeUTC
+                PurchasedOnUTC= requestDateTimeUTC,
+                Content=createCouponResponse.Content
 
             });
             AircashSimulatorContext.SaveChanges();
