@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Services.AbonSalePartner;
 using Services.AbonOnlinePartner;
 using Services.HttpRequest;
+using AircashSimulator.Configuration;
 
 namespace AircashSimulator
 {
@@ -33,6 +34,8 @@ namespace AircashSimulator
             services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
             services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
             services.AddTransient<IHttpRequestService, HttpRequestService>();
+
+            services.Configure<AbonConfiguration>(Configuration.GetSection("AbonConfiguration"));
         }
 
         

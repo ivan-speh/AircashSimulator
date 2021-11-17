@@ -8,6 +8,8 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Services.HttpRequest;
+using AircashSimulator.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Services.AbonOnlinePartner
 {
@@ -15,10 +17,13 @@ namespace Services.AbonOnlinePartner
     {
         private AircashSimulatorContext AircashSimulatorContext;
         private IHttpRequestService HttpRequestService;
-        public AbonOnlinePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService)
+        private AbonConfiguration AbonConfiguration;
+
+        public AbonOnlinePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService, IOptionsMonitor<AbonConfiguration> abonConfiguration)
         {
             AircashSimulatorContext = aircashSimulatorContext;
             HttpRequestService = httpRequestService;
+            AbonConfiguration = abonConfiguration.CurrentValue;
         }
         public async Task ValidateCoupon(string couponCode)
         {

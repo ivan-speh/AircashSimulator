@@ -1,7 +1,9 @@
 ﻿using AircashSignature;
+using AircashSimulator.Configuration;
 using DataAccess;
 using Domain.Entities;
 using Domain.Entities.Enum;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Services.HttpRequest;
 using System;
@@ -16,10 +18,13 @@ namespace Services.AbonSalePartner
     {
         private AircashSimulatorContext AircashSimulatorContext;
         private IHttpRequestService HttpRequestService;
-        public AbonSalePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService)
+        private AbonConfiguration AbonConfiguration;
+
+        public AbonSalePartnerService(AircashSimulatorContext aircashSimulatorContext, IHttpRequestService httpRequestService, IOptionsMonitor<AbonConfiguration> abonConfiguration)
         {
             AircashSimulatorContext = aircashSimulatorContext;
             HttpRequestService = httpRequestService;
+            AbonConfiguration = abonConfiguration.CurrentValue;
         }
 
 
