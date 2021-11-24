@@ -9,6 +9,11 @@ using Services.AbonSalePartner;
 using Services.AbonOnlinePartner;
 using Services.HttpRequest;
 using AircashSimulator.Configuration;
+using Services.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace AircashSimulator
 {
@@ -34,8 +39,32 @@ namespace AircashSimulator
             services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
             services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
             services.AddTransient<IHttpRequestService, HttpRequestService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
             services.Configure<AbonConfiguration>(Configuration.GetSection("AbonConfiguration"));
+            services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
+
+            var jwtConfiguration = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(x =>
+           {
+               x.RequireHttpsMetadata = true;
+               x.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateAudience = true,
+                   ValidAudience = jwtConfiguration.Audience,
+                   ValidateIssuer = true,
+                   ValidIssuer = jwtConfiguration.Issuer,
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfiguration.Secret)),
+                   ValidateLifetime = true,
+                   ClockSkew = TimeSpan.Zero
+               };
+           });
         }
 
         
@@ -47,9 +76,12 @@ namespace AircashSimulator
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthorization();
             app.UseHttpsRedirection();
             app.UseCors();
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

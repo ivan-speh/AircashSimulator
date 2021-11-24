@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +20,7 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\Services.AbonOnlinePartner\Services.AbonOnlinePartner.csproj" />
     <ProjectReference Include="..\Services.AbonSalePartner\Services.AbonSalePartner.csproj" />
+    <ProjectReference Include="..\Services.Authentication\Services.Authentication.csproj" />
     <ProjectReference Include="..\Services.HttpRequest\Services.HttpRequest.csproj" />
   </ItemGroup>
 
