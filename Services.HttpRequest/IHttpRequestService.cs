@@ -6,6 +6,6 @@ namespace Services.HttpRequest
 {
     public interface IHttpRequestService
     {
-        Task<string> SendRequestAircash(object toSend, HttpMethod method, string uri);
+        Task<HttpResponse> SendRequestAircash(object toSend, HttpMethod method, string uri);
     }
 }
