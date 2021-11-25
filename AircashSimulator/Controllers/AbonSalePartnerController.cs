@@ -20,15 +20,14 @@ namespace AircashSimulator
         [HttpPost]
         public async Task<IActionResult> CreateCoupon(CreateCouponRequest createCouponRequest)
         {
-            await AbonSalePartnerService.CreateCoupon(createCouponRequest.Value, createCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
-            return Ok(createCouponRequest);
-            //return Ok(AbonSalePartnerService.CreateCoupon(createCouponRequest.Value, createCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF")));
+            var response=await AbonSalePartnerService.CreateCoupon(createCouponRequest.Value, createCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> CancelCoupon(CancelCouponRequest cancelCouponRequest)
         {
-            await AbonSalePartnerService.CancelCoupon(cancelCouponRequest.SerialNumber, cancelCouponRequest.PointOfSaleId);
-            return Ok(cancelCouponRequest);
+            var response=await AbonSalePartnerService.CancelCoupon(cancelCouponRequest.SerialNumber, cancelCouponRequest.PointOfSaleId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
+            return Ok(response);
         }
     }
 
