@@ -31,20 +31,21 @@ namespace AircashSimulator
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            
-            services.AddDbContext<AircashSimulatorContext>(options => options.UseSqlServer(Configuration["AbonSimulatorConfiguration:ConnectionString"]), ServiceLifetime.Transient);
-            services.AddHttpClient<IHttpRequestService, HttpRequestService>();
-
-            services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
-            services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
-            services.AddTransient<IHttpRequestService, HttpRequestService>();
-            services.AddTransient<IAuthenticationService, AuthenticationService>();
-
-            services.Configure<AbonConfiguration>(Configuration.GetSection("AbonConfiguration"));
-            services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));
-
             var jwtConfiguration = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+            services.AddDbContext<AircashSimulatorContext>(options => options.UseSqlServer(Configuration["AbonSimulatorConfiguration:ConnectionString"]), ServiceLifetime.Transient);
+            
+            
+            services.AddControllers();
+            services.AddCors(config =>
+            {
+                config.AddPolicy("open", options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyMethod();
+                    options.AllowAnyHeader();
+                });
+            });
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,6 +66,15 @@ namespace AircashSimulator
                    ClockSkew = TimeSpan.Zero
                };
            });
+
+            
+            services.AddHttpClient<IHttpRequestService, HttpRequestService>();
+            services.AddTransient<IAbonSalePartnerService, AbonSalePartnerService>();
+            services.AddTransient<IAbonOnlinePartnerService, AbonOnlinePartnerService>();
+            services.AddTransient<IHttpRequestService, HttpRequestService>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
+            services.Configure<AbonConfiguration>(Configuration.GetSection("AbonConfiguration"));
+            services.Configure<JwtConfiguration>(Configuration.GetSection("JwtConfiguration"));  
         }
 
         
@@ -76,12 +86,20 @@ namespace AircashSimulator
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-            app.UseRouting();
-            app.UseAuthorization();
+            app.UseExceptionHandler("/api/Error");
+
+           // app.UseSerilogRequestLogging();
+
             app.UseHttpsRedirection();
-            app.UseCors();
-           
+
+            app.UseRouting();
+
+            app.UseCors("open");
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
