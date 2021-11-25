@@ -13,6 +13,7 @@ namespace DataAccess
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<PartnerEntity> Partners { get; set; }
         public DbSet<CouponEntity> Coupons { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
