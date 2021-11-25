@@ -20,17 +20,17 @@ namespace AircashSimulator
         [HttpPost]
         public async Task<IActionResult> ValidateCoupon(ValidateCouponRequest validateCouponRequest)
         {
-            //await AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest.CouponCode);
-            //return Ok(validateCouponRequest);
-            return Ok(AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest.CouponCode));
+            var response=await AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest.CouponCode, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
+            return Ok(response);
+            //return Ok(AbonOnlinePartnerService.ValidateCoupon(validateCouponRequest.CouponCode));
         }
 
         [HttpPost]
         public async Task<IActionResult> ConfirmTransaction(ConfirmTransactionRequest confirmTransactionRequest)
         {
-            //await AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest.CouponCode, confirmTransactionRequest.UserId);
-            //return Ok(confirmTransactionRequest);
-            return Ok(AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest.CouponCode, confirmTransactionRequest.UserId).ToString());
+            var response=await AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest.CouponCode, confirmTransactionRequest.UserId, new Guid("8F62C8F0-7155-4C0E-8EBE-CD9357CFD1BF"));
+            return Ok(response);
+            //return Ok(AbonOnlinePartnerService.ConfirmTransaction(confirmTransactionRequest.CouponCode, confirmTransactionRequest.UserId).ToString());
         }
     }
 }

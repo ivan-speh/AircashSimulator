@@ -14,9 +14,21 @@ namespace Services.HttpRequest
         {
             HttpClient = httpClient;
         }
-        public async Task<string> SendRequestAircash(object toSend, HttpMethod method, string uri)
+        public async Task<HttpResponse> SendRequestAircash(object toSend, HttpMethod method, string uri)
         {
-            string responseContent;
+            
+            using (var request = new HttpRequestMessage(method, uri))
+            {
+                string json = JsonConvert.SerializeObject(toSend);
+                request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                using (var response = await HttpClient.SendAsync(request))
+                {
+                    HttpResponse httpResponse = new HttpResponse { ResponseContent = await response.Content.ReadAsStringAsync(), ResponseCode =  response.StatusCode };
+                    return httpResponse;
+                }
+            };
+
+            /*string responseContent;
             using (var request = new HttpRequestMessage(method, uri))
             {
                 string json = JsonConvert.SerializeObject(toSend);
@@ -32,7 +44,7 @@ namespace Services.HttpRequest
                     responseContent = await response.Content.ReadAsStringAsync();
                 }
             };
-            return responseContent;
+            return responseContent;*/
         }
     }
 }

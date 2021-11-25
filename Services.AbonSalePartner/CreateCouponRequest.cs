@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Services.AbonSalePartner
 {
-    public class CreateCouponRequest :ISignature
+    class CreateCouponRequest : ISignature
     {
         public string PartnerId { get; set; }
         public decimal Value { get; set; }
